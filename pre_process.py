@@ -1,4 +1,4 @@
-dataSet = {}
+data_set = {}
 d = 0
 query = []
 
@@ -9,10 +9,11 @@ def start(window_size, q):
     query = q
 
     # open files and process them
-    open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_bac.txt')
-    open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_plasmid.txt')
+    # open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_bac.txt')
+    # open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_plasmid.txt')
+    open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/test.txt')
 
-    return dataSet
+    return data_set
 
 
 def open_files(path):
@@ -106,12 +107,12 @@ def parse_word(word, genome_num):
 
 
 def add_window(window, genome_num):
-    global dataSet
+    global data_set
     final_window = list(filter(lambda x: x != 'X', window))
-    final_window.sort()
+    final_window.sort()  # --TODO: decide if we need to == yes!!!
 
-    if genome_num in dataSet.keys():
-        if final_window not in dataSet[genome_num]:
-            dataSet[genome_num].append(final_window)
+    if genome_num in data_set.keys():
+        if final_window not in data_set[genome_num]:
+            data_set[genome_num].append(final_window)
     else:
-        dataSet[genome_num] = [final_window]
+        data_set[genome_num] = [final_window]
