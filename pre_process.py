@@ -12,7 +12,7 @@ def start(window_size, q):
     open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_bac.txt')
     open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_plasmid.txt')
 
-    return dataSet;
+    return dataSet
 
 
 def open_files(path):
@@ -109,9 +109,9 @@ def add_window(window, genome_num):
     global dataSet
     final_window = list(filter(lambda x: x != 'X', window))
     final_window.sort()
-    final_window = tuple(final_window)
-    if final_window in dataSet.keys():
-        if genome_num not in dataSet[final_window]:
-            dataSet[final_window].append(genome_num)
+
+    if genome_num in dataSet.keys():
+        if final_window not in dataSet[genome_num]:
+            dataSet[genome_num].append(final_window)
     else:
-        dataSet[final_window] = [genome_num]
+        dataSet[genome_num] = [final_window]
