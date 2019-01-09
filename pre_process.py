@@ -1,17 +1,19 @@
 data_set = {}
 d = 0
+l = 0
 query = []
 
 
-def start(window_size, q):
-    global d, query
+def start(window_size, q, length):
+    global d, query, l
     d = window_size
+    l = length
     query = q
 
     # open files and process them
-    # open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_bac.txt')
+    open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_bac.txt')
     # open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/cog_words_plasmid.txt')
-    open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/test.txt')
+    # open_files('/Users/Shani/PycharmProjects/Gene_Block_data_mining_in_bacterial_genomes/test.txt')
 
     return data_set
 
@@ -108,8 +110,13 @@ def parse_word(word, genome_num):
 
 def add_window(window, genome_num):
     global data_set
-    final_window = list(filter(lambda x: x != 'X', window))
-    final_window.sort()  # --TODO: decide if we need to == yes!!!
+    final_window = list(filter(lambda x: (x != 'X') and (x not in query), window))
+
+    # we don't need to add the paths that are smaller than l to the tree
+    if len(final_window) < l-len(query):
+        return
+
+    final_window.sort()  # decide if we need to == yes!!!
 
     if genome_num in data_set.keys():
         if final_window not in data_set[genome_num]:

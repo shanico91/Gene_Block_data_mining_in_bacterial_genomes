@@ -10,14 +10,9 @@ class TreeNode:
     def __init__(self, name_value, num_occur, parent_node):
         self.name = name_value  # gene cog number
         self.count = num_occur  # in how many genomes this gene appeared in a valid window
-        self.node_link = None  # points to the next node with the same cog number
         self.parent = parent_node
         self.children = {}
         self.last_update = 0  # the last genome that updated this node in the creation of the tree
-        if parent_node is None:  # will be used to apply the l (min size of report) constriction
-            self.depth = 0
-        else:
-            self.depth = parent_node.depth + 1
 
     # increments the count variable with a given amount
 
