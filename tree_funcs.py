@@ -5,7 +5,7 @@ import tree_node
 # This makes two passes through the dataset.
 # The first pass goes through everything in the dataset and counts the frequency of each item.
 # These are stored in the header table.
-def create_tree(data_set,  length, min_sup=1):  # create FP-tree from dataset but don't mine
+def create_tree(data_set, length, min_sup=1):  # create FP-tree from dataset but don't mine
     header_table = {}  # {gene: no. of genomes it appears in}
     # go over dataSet twice:
 
@@ -37,7 +37,7 @@ def create_tree(data_set,  length, min_sup=1):  # create FP-tree from dataset bu
             for gene in window:
                 if gene in freq_gene_set:
                     filtered_window_d[gene] = header_table[gene]
-                    # TODO: this makes sure that each gene appears only once in ordered items- correct?
+                    # this makes sure that each gene appears only once in ordered items- correct? we think so :)
 
             if len(filtered_window_d) > length:  # there are frequent genes in this window - at least l
                 ordered_path = [v[0] for v in sorted(filtered_window_d.items(), key=lambda p: p[1], reverse=True)]
@@ -63,15 +63,17 @@ def update_tree(window, in_tree, genome_num):
         update_tree(window[1::], in_tree.children[window[0]], genome_num)
 
 
-def dfs(node, final_ans, curr_path):
+def dfs(node, final_ans, curr_path, min_sup):
     if node.parent is not None:
         curr_path.append(node.name)
 
     if len(node.children) == 0:  # leaf
-        final_ans.append(curr_path)
+        if node.count >= min_sup:  # here we apply the min_sup constraint to a path(hitchhiker's group)
+            final_ans.append([curr_path, node.count])
+
         # print(curr_path)
         return
 
     for child in node.children.values():
         new_path = curr_path[:]
-        dfs(child, final_ans, new_path)
+        dfs(child, final_ans, new_path, min_sup)
