@@ -1,15 +1,12 @@
 import tree_node
 
 
-# createTree(), takes the dataset and the minimum support as arguments and builds the FP-tree.
-# This makes two passes through the dataset.
-# The first pass goes through everything in the dataset and counts the frequency of each item.
-# These are stored in the header table.
-def create_tree(data_set, length, min_sup=1):  # create FP-tree from dataset but don't mine
+# createTree() builds the FP-tree from the data_set by filtering the genes that satisfy the
+# min_sup and length conditions.
+def create_tree(data_set, length, min_sup=1):
     header_table = {}  # {gene: no. of genomes it appears in}
-    # go over dataSet twice:
 
-    # first pass counts frequency of occurrence
+    # this pass counts frequency of occurrence
     for genome in data_set:  # genome id
         local_set = set()
         for window in data_set[genome]:
@@ -24,10 +21,9 @@ def create_tree(data_set, length, min_sup=1):  # create FP-tree from dataset but
         if header_table[gene] < min_sup:
             del (header_table[gene])
     freq_gene_set = set(header_table.keys())
-    # print 'freq_gene_set: ',freq_gene_set
 
     if len(freq_gene_set) == 0:
-        return None  # if no genes meet min support -->get out
+        return None  # if no genes meet min support --> get out
 
     ret_tree = tree_node.TreeNode('Null Set', 1, None)  # create tree
 
@@ -37,15 +33,14 @@ def create_tree(data_set, length, min_sup=1):  # create FP-tree from dataset but
             for gene in window:
                 if gene in freq_gene_set:
                     filtered_window_d[gene] = header_table[gene]
-                    # this makes sure that each gene appears only once in ordered items- correct? we think so :)
+                    # this makes sure that each gene appears only once in ordered items
 
             if len(filtered_window_d) > length:  # there are frequent genes in this window - at least l
                 ordered_path = [v[0] for v in sorted(filtered_window_d.items(), key=lambda p: p[1], reverse=True)]
                 # (ordered_path is the window that is ordered in a descending order based on
                 # frequency of each gene in the genomes)
-                update_tree(ordered_path, ret_tree, genome)  # populate tree with ordered freq itemset
+                update_tree(ordered_path, ret_tree, genome)  # populate tree with ordered_path
 
-    # return tree and header table
     return ret_tree
 
 
@@ -63,6 +58,7 @@ def update_tree(window, in_tree, genome_num):
         update_tree(window[1::], in_tree.children[window[0]], genome_num)
 
 
+# traverse the tree with the min_sup condition:
 def dfs(node, final_ans, curr_path, min_sup):
     if node.parent is not None:
         curr_path.append(node.name)
@@ -71,7 +67,6 @@ def dfs(node, final_ans, curr_path, min_sup):
         if node.count >= min_sup:  # here we apply the min_sup constraint to a path(hitchhiker's group)
             final_ans.append([curr_path, node.count])
 
-        # print(curr_path)
         return
 
     for child in node.children.values():

@@ -1,10 +1,3 @@
-# variables:
-# name of the node, a count
-# node_link used to link similar items
-# parent variable used to refer to the parent of the node in the tree
-# node contains an empty dictionary for the children in the node
-
-
 class TreeNode:
 
     def __init__(self, name_value, num_occur, parent_node):
@@ -15,12 +8,10 @@ class TreeNode:
         self.last_update = 0  # the last genome that updated this node in the creation of the tree
 
     # increments the count variable with a given amount
-
     def inc(self, num_occur):
         self.count += num_occur
 
-    # display tree in text. Useful for debugging
-
+    # display tree in text. Useful for debugging.
     def disp(self, ind=1):
         print('  ' * ind, self.name, ' ', self.count)
         for child in self.children.values():

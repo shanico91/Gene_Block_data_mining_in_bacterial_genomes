@@ -2,43 +2,45 @@ import sys
 
 import cog_funcs
 import pre_process
-import tree_node
 import tree_funcs
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    # debug: args = str(sys.argv)
+
+    # get the arguments from the user:
     d = int(sys.argv[1])
     length = int(sys.argv[2])  # l
     min_sup = int(sys.argv[3])
     query = sys.argv[4:]
 
-    # debug: print (query)
+    # get the data_set to work with from the pre-processing:
     data_set = {}  # {window: genome id}
     data_set = pre_process.start(d, query, length)
-    # print(data_set)
 
+    # create the tree from the data_set:
     tree = tree_funcs.create_tree(data_set, length - len(query), min_sup)
-    if tree is None:
+    if tree is None:  # if the tree is empty:
         print("there are no frequent hitchhiker's")
         sys.exit()
+
+    # get the hitchhikers paths from the tree:
     freq_paths = []
     tree_funcs.dfs(tree, freq_paths, [], min_sup)
-
-    if len(freq_paths)==0:
+    if len(freq_paths) == 0:  # if there isn't any that appears at least min_sup
         print("there are no frequent hitchhiker's")
         sys.exit()
 
     # top_paths are the paths ordered by the frequency of the paths
     top_paths = sorted(freq_paths, key=lambda p: p[1], reverse=True)
 
-    # print the info of the top three paths
+    # print the info of the top three paths:
     top_three = set(query)
     for path in top_paths[:3]:
         for gene in path[0]:
             top_three.add(gene)
 
-    cogs_info = cog_funcs.get_cogs_info(top_three)  # a dictionary of the info of the cogs in the top three paths
+    # a dictionary of the info of the cogs in the top three paths:
+    cogs_info = cog_funcs.get_cogs_info(top_three)
 
     print("The query is: ")
     for q in query:
@@ -54,6 +56,7 @@ if __name__ == '__main__':
 
         i += 1
 
+    # plot the graph:
     x = []
     y = []
     for path in freq_paths:
